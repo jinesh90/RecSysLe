@@ -1,3 +1,6 @@
+"""
+gives simple top movies based on avg user rating and number of ratings.
+"""
 import pandas as pd
 
 
