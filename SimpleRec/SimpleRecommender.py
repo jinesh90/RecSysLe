@@ -3,18 +3,21 @@ gives simple top movies based on avg user rating and number of ratings.
 """
 import pandas as pd
 
-
 class SimpleRecommender:
     """
     give top movies based on no of votes and avg rating
     file link https://www.kaggle.com/rounakbanik/the-movies-dataset/downloads/movies_metadata.csv/7
     """
-    def __init__(self, data):
+    def __init__(self, data=None, dataframe=None):
         """
-        imdb file data in .csv
+        :param data: provide data path
+        :param dataframe: or provide data frame
         """
         # Load movies into csv data frame
-        self.df_movie = pd.read_csv(data)
+        if dataframe is not None:
+            self.df_movie = dataframe
+        else:
+            self.df_movie = pd.read_csv(data)
 
     def weighted_formula(self, data_frame, m, C):
         """
@@ -40,7 +43,7 @@ class SimpleRecommender:
         :return: data frame with
         """
         # higher the selected value means higher # votes.for the good result select higher percentile
-        selected_value = self.df_movie['vote_count'].quantile(0.95)
+        selected_value = self.df_movie['vote_count'].quantile(0.85)
 
         # now filter movies who has runtime between 45 mins to 300 mins to qualify movies.
         new_df_movies = self.df_movie[(self.df_movie['runtime'] >= 45) & (self.df_movie['runtime'] <= 300)]
@@ -60,7 +63,6 @@ class SimpleRecommender:
         return new_df_movies.sort_values(by=['score'], ascending=False)[0:top]
 
 
-
+# run example, uncomment following code
 # S = SimpleRecommender("/home/jinesh/Desktop/movies_metadata.csv")
 # print(S.get_recommendation(top=25))
-
